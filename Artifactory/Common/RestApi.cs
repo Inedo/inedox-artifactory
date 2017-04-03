@@ -73,19 +73,5 @@ namespace Inedo.Extensions.Artifactory
                 return $"{(int)this.Status} {this.Message}";
             }
         }
-
-        public static object AsObject(this RuntimeValue value)
-        {
-            switch (value.ValueType)
-            {
-                case RuntimeValueType.Map:
-                    return value.AsDictionary().ToDictionary(v => v.Key, v => v.Value.AsObject());
-                case RuntimeValueType.Vector:
-                    return value.AsEnumerable().Select(v => v.AsObject());
-                case RuntimeValueType.Scalar:
-                    return value.AsString();
-            }
-            throw new NotImplementedException();
-        }
     }
 }
