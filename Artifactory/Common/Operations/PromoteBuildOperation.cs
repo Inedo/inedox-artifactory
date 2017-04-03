@@ -23,6 +23,7 @@ using System.Threading.Tasks;
 namespace Inedo.Extensions.Artifactory.Operations
 {
     [DisplayName("Promote Build")]
+    [Description("Change the status of a build, optionally moving or copying the build's artifacts and its dependencies to a target repository and setting properties on promoted artifacts.")]
     [ScriptAlias("Promote-Build")]
     public sealed class PromoteBuildOperation : ArtifactoryOperation
     {
@@ -51,16 +52,18 @@ namespace Inedo.Extensions.Artifactory.Operations
 
         [ScriptAlias("Properties")]
         [FieldEditMode(FieldEditMode.Multiline)]
-        public IDictionary<string, RuntimeValue> Properties { get; set; }
+        public IReadOnlyDictionary<string, RuntimeValue> Properties { get; set; }
 
         [Category("Move Artifacts")]
         [DisplayName("From repository")]
         [ScriptAlias("FromRepository")]
+        [SuggestibleValue(typeof(RepositorySuggestionProvider))]
         public string FromRepository { get; set; }
 
         [Category("Move Artifacts")]
         [DisplayName("To repository")]
         [ScriptAlias("ToRepository")]
+        [SuggestibleValue(typeof(RepositorySuggestionProvider))]
         public string ToRepository { get; set; }
 
         [Category("Move Artifacts")]

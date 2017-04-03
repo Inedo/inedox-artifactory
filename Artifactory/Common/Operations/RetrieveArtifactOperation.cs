@@ -21,6 +21,7 @@ using System.IO;
 namespace Inedo.Extensions.Artifactory.Operations
 {
     [DisplayName("Retrieve Artifact")]
+    [Description("Retrieves an artifact from the specified destination.")]
     [ScriptAlias("Retrieve-Artifact")]
     public sealed class RetrieveArtifactOperation : ArtifactoryOperation
     {

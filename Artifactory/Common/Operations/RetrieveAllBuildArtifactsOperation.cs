@@ -1,26 +1,32 @@
 ﻿#if BuildMaster
 using Inedo.BuildMaster.Extensibility;
 using Inedo.BuildMaster.Extensibility.Operations;
+using Inedo.BuildMaster.Web;
 using Inedo.BuildMaster.Web.Controls;
 using Inedo.BuildMaster.Web.Controls.Plans;
 #elif Otter
 using Inedo.Otter.Extensibility;
 using Inedo.Otter.Extensibility.Operations;
+using Inedo.Otter.Extensions;
 using Inedo.Otter.Web.Controls;
 using Inedo.Otter.Web.Controls.Plans;
 #endif
+using Inedo.Agents;
+using Inedo.Diagnostics;
 using Inedo.Documentation;
 using Inedo.Extensions.Artifactory.SuggestionProviders;
-using System;
-using System.ComponentModel;
-using System.Threading.Tasks;
-using Inedo.Agents;
 using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Inedo.Extensions.Artifactory.Operations
 {
     [DisplayName("Retrieve All Build Artifacts")]
+    [Description("Retrieves a zip file containing all artifacts related to a specific build.")]
     [ScriptAlias("Retrieve-All-Build-Artifacts")]
     public sealed class RetrieveAllBuildArtifactsOperation : ArtifactoryOperation
     {
@@ -51,6 +57,20 @@ namespace Inedo.Extensions.Artifactory.Operations
         [FilePathEditor]
         public string ToFile { get; set; }
 
+        [DisplayName("Mappings")]
+        [ScriptAlias("Mappings")]
+        [FieldEditMode(FieldEditMode.Multiline)]
+        [Example(@"<pre>Mappings: @(
+    %(
+        input: `(.+`)/`(.+`)-sources.jar,
+        output: `$1/sources/`$2.jar
+    ),
+    %(
+        input: `(.+`)-release.zip
+    )
+)</pre>")]
+        public IEnumerable<IReadOnlyDictionary<string, string>> Mappings { get; set; }
+
         public override async Task ExecuteAsync(IOperationExecutionContext context)
         {
             var fileOps = await context.Agent.GetServiceAsync<IFileOperationsExecuter>().ConfigureAwait(false);
@@ -59,7 +79,8 @@ namespace Inedo.Extensions.Artifactory.Operations
             {
                 BuildName = this.BuildName,
                 BuildNumber = this.BuildNumber,
-                BuildStatus = AH.NullIf(this.Status, string.Empty)
+                BuildStatus = AH.NullIf(this.Status, string.Empty),
+                Mappings = ConvertMappings(this.Mappings)
             };
 
             await this.PostAsync("api/archive/buildArtifacts", request, async response =>
@@ -70,6 +91,30 @@ namespace Inedo.Extensions.Artifactory.Operations
                     await content.CopyToAsync(output).ConfigureAwait(false);
                 }
             }, context.CancellationToken).ConfigureAwait(false);
+        }
+
+        private IEnumerable<Request.Mapping> ConvertMappings(IEnumerable<IReadOnlyDictionary<string, string>> mappings)
+        {
+            if (!(mappings?.Any() ?? false))
+            {
+                return null;
+            }
+
+            foreach (var mapping in mappings)
+            {
+                if (!mapping.ContainsKey("input"))
+                {
+                    this.LogWarning("Mapping missing \"input\" key.");
+                }
+                foreach (var key in mapping.Keys)
+                {
+                    if (key != "input" && key != "output")
+                    {
+                        this.LogWarning($"Mapping contains unknown key \"{key}\".");
+                    }
+                }
+            }
+            return mappings.Where(m => m.ContainsKey("input")).Select(m => new Request.Mapping { Input = m["input"], Output = m.ContainsKey("output") ? m["output"] : null });
         }
 
         protected override ExtendedRichDescription GetDescription(IOperationConfiguration config)
@@ -95,6 +140,16 @@ namespace Inedo.Extensions.Artifactory.Operations
             public string BuildStatus { get; set; }
             [JsonProperty(PropertyName = "archiveType", Required = Required.Always)]
             public string ArchiveType => "zip";
+            [JsonProperty(PropertyName = "mappings", Required = Required.DisallowNull)]
+            public IEnumerable<Mapping> Mappings { get; set; }
+
+            internal struct Mapping
+            {
+                [JsonProperty(PropertyName = "input", Required = Required.Always)]
+                public string Input { get; set; }
+                [JsonProperty(PropertyName = "output", Required = Required.DisallowNull)]
+                public string Output { get; set; }
+            }
         }
     }
 }
