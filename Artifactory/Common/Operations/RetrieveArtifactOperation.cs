@@ -10,13 +10,12 @@ using Inedo.Otter.Web.Controls;
 using Inedo.Otter.Web.Controls.Plans;
 #endif
 using Inedo.Agents;
-using Inedo.Diagnostics;
 using Inedo.Documentation;
 using Inedo.Extensions.Artifactory.SuggestionProviders;
 using System.ComponentModel;
+using System.IO;
 using System.Net.Http;
 using System.Threading.Tasks;
-using System.IO;
 
 namespace Inedo.Extensions.Artifactory.Operations
 {
@@ -53,15 +52,10 @@ namespace Inedo.Extensions.Artifactory.Operations
             using (var client = this.CreateClient())
             using (var response = await client.GetAsync($"{this.RepositoryKey.Trim('/')}/{this.PathToArtifact.Trim('/')}", HttpCompletionOption.ResponseHeadersRead, context.CancellationToken).ConfigureAwait(false))
             {
-                if (!response.IsSuccessStatusCode)
-                {
-                    this.LogError($"{(int)response.StatusCode} {response.ReasonPhrase}");
-                    return;
-                }
-
+                using (var content = await this.ParseResponseAsync(response).ConfigureAwait(false))
                 using (var file = await fileOps.OpenFileAsync(this.ToFile, FileMode.Create, FileAccess.Write).ConfigureAwait(false))
                 {
-                    await response.Content.CopyToAsync(file).ConfigureAwait(false);
+                    await content.CopyToAsync(file).ConfigureAwait(false);
                 }
             }
         }

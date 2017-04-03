@@ -9,6 +9,7 @@ using Inedo.Otter.Extensibility.Operations;
 using Inedo.Otter.Extensions;
 using Inedo.Otter.Web.Controls;
 #endif
+using Inedo.Diagnostics;
 using Inedo.Documentation;
 using Inedo.ExecutionEngine;
 using Inedo.Extensions.Artifactory.SuggestionProviders;
@@ -77,6 +78,15 @@ namespace Inedo.Extensions.Artifactory.Operations
         [PlaceholderText("eg. @(compile, runtime)")]
         public IEnumerable<string> Scopes { get; set; }
 
+        private static readonly Dictionary<string, MessageLevel> MessageLevels = new Dictionary<string, MessageLevel>(StringComparer.OrdinalIgnoreCase)
+        {
+            { "ERROR", MessageLevel.Error },
+            { "WARN", MessageLevel.Warning },
+            { "INFO", MessageLevel.Information },
+            { "DEBUG", MessageLevel.Debug },
+            { "TRACE", MessageLevel.Debug },
+        };
+
         public override async Task ExecuteAsync(IOperationExecutionContext context)
         {
             var request = new Request
@@ -94,6 +104,10 @@ namespace Inedo.Extensions.Artifactory.Operations
             await this.PostAsync($"api/build/promote/{Uri.EscapeUriString(this.BuildName)}/{Uri.EscapeUriString(this.BuildNumber)}", request, async response =>
             {
                 var result = await this.ParseResponseAsync<BuildResult>(response).ConfigureAwait(false);
+                foreach (var message in result.Messages)
+                {
+                    this.Log(MessageLevels.ContainsKey(message.Level) ? MessageLevels[message.Level] : MessageLevel.Warning, message.Message);
+                }
             }, context.CancellationToken).ConfigureAwait(false);
         }
 

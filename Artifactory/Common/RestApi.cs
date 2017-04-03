@@ -35,17 +35,22 @@ namespace Inedo.Extensions.Artifactory
 
         public static async Task<HttpContent> ParseResponseAsync(this ILogger logger, HttpResponseMessage response)
         {
-            if (response.Content.Headers.ContentType.MediaType == "application/json")
+            if (!response.IsSuccessStatusCode)
             {
-                var errors = JsonConvert.DeserializeObject<ArtifactoryErrors>(await response.Content.ReadAsStringAsync().ConfigureAwait(false));
-                foreach (var error in errors.Errors)
+                try
                 {
-                    logger.LogError(error.ToString());
+                    var errors = JsonConvert.DeserializeObject<ArtifactoryErrors>(await response.Content.ReadAsStringAsync().ConfigureAwait(false));
+                    foreach (var error in errors.Errors)
+                    {
+                        logger.LogError(error.ToString());
+                    }
+                }
+                catch (JsonException)
+                {
+                    logger.LogError($"{(int)response.StatusCode} {response.ReasonPhrase}");
                 }
                 return new ByteArrayContent(new byte[0]);
             }
-
-            response.EnsureSuccessStatusCode();
 
             return response.Content;
         }
