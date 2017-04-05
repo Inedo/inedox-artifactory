@@ -11,9 +11,12 @@
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)Credentials\ArtifactoryCredentials.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Operations\ArtifactoryOperation.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Operations\GetArtifactMetadataOperation.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Operations\RetrieveArtifactOperation.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Operations\RetrieveAllBuildArtifactsOperation.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Operations\PromoteBuildOperation.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Operations\UploadArtifactOperation.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Operations\UploadBuildOperation.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Properties\AssemblyInfo.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)RestApi.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SuggestionProviders\ArtifactorySuggestionProvider.cs" />
