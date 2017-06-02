@@ -118,8 +118,6 @@ namespace Inedo.Extensions.Artifactory.Operations
             public string MimeType { get; set; }
             [JsonProperty(PropertyName = "checksums", Required = Required.Always)]
             public Checksum Checksums { get; set; }
-            [JsonProperty(PropertyName = "originalChecksums", NullValueHandling = NullValueHandling.Ignore)]
-            public Checksum? OriginalChecksums { get; set; }
 
             internal struct Checksum
             {
