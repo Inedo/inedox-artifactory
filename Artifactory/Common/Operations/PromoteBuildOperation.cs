@@ -53,6 +53,7 @@ namespace Inedo.Extensions.Artifactory.Operations
 
         [ScriptAlias("Properties")]
         [FieldEditMode(FieldEditMode.Multiline)]
+        [Example(@"%(foo: @(bar, baz), abc: @(1, 2, 3))")]
         public IReadOnlyDictionary<string, RuntimeValue> Properties { get; set; }
 
         [Category("Move Artifacts")]
@@ -157,27 +158,27 @@ namespace Inedo.Extensions.Artifactory.Operations
 
         private struct Request
         {
-            [JsonProperty(PropertyName = "status", Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
+            [JsonProperty(PropertyName = "status", NullValueHandling = NullValueHandling.Ignore)]
             public string Status { get; set; }
-            [JsonProperty(PropertyName = "comment", Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
+            [JsonProperty(PropertyName = "comment", NullValueHandling = NullValueHandling.Ignore)]
             public string Comment { get; set; }
-            [JsonProperty(PropertyName = "ciUser", Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
+            [JsonProperty(PropertyName = "ciUser", NullValueHandling = NullValueHandling.Ignore)]
             public string CiUser => typeof(PromoteBuildOperation).Assembly.GetCustomAttribute<AssemblyProductAttribute>().Product;
-            [JsonProperty(PropertyName = "timestamp", Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
+            [JsonProperty(PropertyName = "timestamp", NullValueHandling = NullValueHandling.Ignore)]
             public string TimeStamp => DateTime.UtcNow.ToString("yyyy'-'MM'-'dd'T'HH':'mm':'ss'.'fff'+0000'");
-            [JsonProperty(PropertyName = "dryRun", Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
+            [JsonProperty(PropertyName = "dryRun", NullValueHandling = NullValueHandling.Ignore)]
             public bool DryRun { get; set; }
-            [JsonProperty(PropertyName = "sourceRepo", Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
+            [JsonProperty(PropertyName = "sourceRepo", NullValueHandling = NullValueHandling.Ignore)]
             public string SourceRepo { get; set; }
-            [JsonProperty(PropertyName = "targetRepo", Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
+            [JsonProperty(PropertyName = "targetRepo", NullValueHandling = NullValueHandling.Ignore)]
             public string TargetRepo { get; set; }
-            [JsonProperty(PropertyName = "copy", Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
+            [JsonProperty(PropertyName = "copy", NullValueHandling = NullValueHandling.Ignore)]
             public bool Copy { get; set; }
-            [JsonProperty(PropertyName = "dependencies", Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
+            [JsonProperty(PropertyName = "dependencies", NullValueHandling = NullValueHandling.Ignore)]
             public bool Dependencies => this.Scopes?.Any() ?? false;
-            [JsonProperty(PropertyName = "scopes", Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
+            [JsonProperty(PropertyName = "scopes", NullValueHandling = NullValueHandling.Ignore)]
             public IEnumerable<string> Scopes { get; set; }
-            [JsonProperty(PropertyName = "properties", Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
+            [JsonProperty(PropertyName = "properties", NullValueHandling = NullValueHandling.Ignore)]
             public IReadOnlyDictionary<string, IEnumerable<string>> Properties { get; set; }
         }
     }

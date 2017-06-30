@@ -60,15 +60,7 @@ namespace Inedo.Extensions.Artifactory.Operations
         [DisplayName("Mappings")]
         [ScriptAlias("Mappings")]
         [FieldEditMode(FieldEditMode.Multiline)]
-        [Example(@"<pre>Mappings: @(
-    %(
-        input: `(.+`)/`(.+`)-sources.jar,
-        output: `$1/sources/`$2.jar
-    ),
-    %(
-        input: `(.+`)-release.zip
-    )
-)</pre>")]
+        [Example(@"Mappings: @(%(input: `(.+`)/`(.+`)-sources.jar, output: `$1/sources/`$2.jar), %(input: `(.+`)-release.zip))")]
         public IEnumerable<IReadOnlyDictionary<string, string>> Mappings { get; set; }
 
         public override async Task ExecuteAsync(IOperationExecutionContext context)
@@ -136,18 +128,18 @@ namespace Inedo.Extensions.Artifactory.Operations
             public string BuildName { get; set; }
             [JsonProperty(PropertyName = "buildNumber", Required = Required.Always)]
             public string BuildNumber { get; set; }
-            [JsonProperty(PropertyName = "buildStatus", Required = Required.DisallowNull)]
+            [JsonProperty(PropertyName = "buildStatus", NullValueHandling = NullValueHandling.Ignore)]
             public string BuildStatus { get; set; }
             [JsonProperty(PropertyName = "archiveType", Required = Required.Always)]
             public string ArchiveType => "zip";
-            [JsonProperty(PropertyName = "mappings", Required = Required.DisallowNull)]
+            [JsonProperty(PropertyName = "mappings", NullValueHandling = NullValueHandling.Ignore)]
             public IEnumerable<Mapping> Mappings { get; set; }
 
             internal struct Mapping
             {
                 [JsonProperty(PropertyName = "input", Required = Required.Always)]
                 public string Input { get; set; }
-                [JsonProperty(PropertyName = "output", Required = Required.DisallowNull)]
+                [JsonProperty(PropertyName = "output", NullValueHandling = NullValueHandling.Ignore)]
                 public string Output { get; set; }
             }
         }
