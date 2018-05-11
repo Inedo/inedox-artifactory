@@ -1,13 +1,9 @@
-﻿#if BuildMaster
-using Inedo.BuildMaster.Extensibility;
-#elif Otter
-using Inedo.Otter.Extensibility;
-#endif
-using Inedo.Extensions.Artifactory.Credentials;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Inedo.Extensibility;
+using Inedo.Extensions.Artifactory.Credentials;
 
 namespace Inedo.Extensions.Artifactory.SuggestionProviders
 {

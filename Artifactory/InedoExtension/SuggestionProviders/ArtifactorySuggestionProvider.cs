@@ -1,28 +1,27 @@
-﻿#if BuildMaster
-using Inedo.BuildMaster.Extensibility;
-using Inedo.BuildMaster.Extensibility.Credentials;
-using Inedo.BuildMaster.Web.Controls;
-#elif Otter
-using Inedo.Otter.Extensibility;
-using Inedo.Otter.Extensibility.Credentials;
-using Inedo.Otter.Web.Controls;
-#endif
-using Inedo.Extensions.Artifactory.Credentials;
+﻿using System;
 using System.Collections.Generic;
 using System.Security;
 using System.Threading.Tasks;
 using Inedo.Diagnostics;
-using System;
+using Inedo.Extensibility;
+using Inedo.Extensibility.Credentials;
+using Inedo.Extensions.Artifactory.Credentials;
+using Inedo.Web;
 
 namespace Inedo.Extensions.Artifactory.SuggestionProviders
 {
-    public abstract class ArtifactorySuggestionProvider : ISuggestionProvider, ILogger
+    public abstract class ArtifactorySuggestionProvider : ISuggestionProvider, ILogger, ILogSink
     {
         public event EventHandler<LogMessageEventArgs> MessageLogged;
 
         public void Log(MessageLevel logLevel, string message)
         {
             this.MessageLogged?.Invoke(this, new LogMessageEventArgs(logLevel, message));
+        }
+
+        public void Log(IMessage message)
+        {
+            this.MessageLogged?.Invoke(this, new LogMessageEventArgs(message.Level, message.Message, message.Category, message.Details, message.ContextData));
         }
 
         public Task<IEnumerable<string>> GetSuggestionsAsync(IComponentConfiguration config)
@@ -39,11 +38,7 @@ namespace Inedo.Extensions.Artifactory.SuggestionProviders
 
         private static SecureString CoalescePassword(string a, SecureString b)
         {
-#if BuildMaster
-            return AH.CoalesceString(a, b?.ToUnsecureString())?.ToSecureString();
-#elif Otter
             return AH.CreateSecureString(AH.CoalesceString(a, AH.Unprotect(b)));
-#endif
         }
     }
 }

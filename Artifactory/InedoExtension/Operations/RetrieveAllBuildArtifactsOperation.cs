@@ -1,27 +1,18 @@
-﻿#if BuildMaster
-using Inedo.BuildMaster.Extensibility;
-using Inedo.BuildMaster.Extensibility.Operations;
-using Inedo.BuildMaster.Web;
-using Inedo.BuildMaster.Web.Controls;
-using Inedo.BuildMaster.Web.Controls.Plans;
-#elif Otter
-using Inedo.Otter.Extensibility;
-using Inedo.Otter.Extensibility.Operations;
-using Inedo.Otter.Extensions;
-using Inedo.Otter.Web.Controls;
-using Inedo.Otter.Web.Controls.Plans;
-#endif
-using Inedo.Agents;
-using Inedo.Diagnostics;
-using Inedo.Documentation;
-using Inedo.Extensions.Artifactory.SuggestionProviders;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Inedo.Agents;
+using Inedo.Diagnostics;
+using Inedo.Documentation;
+using Inedo.Extensibility;
+using Inedo.Extensibility.Operations;
+using Inedo.Extensions.Artifactory.SuggestionProviders;
+using Inedo.Web;
+using Inedo.Web.Plans.ArgumentEditors;
 
 namespace Inedo.Extensions.Artifactory.Operations
 {
@@ -37,7 +28,7 @@ namespace Inedo.Extensions.Artifactory.Operations
         [Required]
         [DisplayName("Build name")]
         [ScriptAlias("BuildName")]
-        [SuggestibleValue(typeof(BuildSuggestionProvider))]
+        [SuggestableValue(typeof(BuildSuggestionProvider))]
         public string BuildName { get; set; }
 
         [Required]

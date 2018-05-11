@@ -1,18 +1,15 @@
-﻿using Inedo.Diagnostics;
-using Inedo.ExecutionEngine;
-using Newtonsoft.Json;
-using System;
+﻿using Newtonsoft.Json;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Inedo.Diagnostics;
 
 namespace Inedo.Extensions.Artifactory
 {
     internal static class RestApi
     {
-        public static async Task<T> ParseResponseAsync<T>(this ILogger logger, HttpResponseMessage response)
+        public static async Task<T> ParseResponseAsync<T>(this ILogSink logger, HttpResponseMessage response)
         {
             var payload = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
 
@@ -33,7 +30,7 @@ namespace Inedo.Extensions.Artifactory
             }
         }
 
-        public static async Task<HttpContent> ParseResponseAsync(this ILogger logger, HttpResponseMessage response)
+        public static async Task<HttpContent> ParseResponseAsync(this ILogSink logger, HttpResponseMessage response)
         {
             if (!response.IsSuccessStatusCode)
             {

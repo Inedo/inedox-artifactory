@@ -1,25 +1,15 @@
-﻿#if BuildMaster
-using Inedo.BuildMaster.Extensibility;
-using Inedo.BuildMaster.Extensibility.Credentials;
-using Inedo.BuildMaster.Extensibility.Operations;
-using Inedo.BuildMaster.Web;
-#elif Otter
-using Inedo.Otter.Extensibility;
-using Inedo.Otter.Extensibility.Credentials;
-using Inedo.Otter.Extensibility.Operations;
-using Inedo.Otter.Extensions;
-#endif
-using Inedo.Diagnostics;
-using Inedo.Extensions.Artifactory.Credentials;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Net;
 using System.Net.Http;
 using System.Security;
 using System.Threading;
 using System.Threading.Tasks;
+using Inedo.Extensibility;
+using Inedo.Extensibility.Credentials;
+using Inedo.Extensibility.Operations;
+using Inedo.Extensions.Artifactory.Credentials;
+using Inedo.Web;
 
 namespace Inedo.Extensions.Artifactory.Operations
 {

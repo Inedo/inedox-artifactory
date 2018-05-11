@@ -1,21 +1,15 @@
-﻿#if BuildMaster
-using Inedo.BuildMaster.Extensibility;
-using Inedo.BuildMaster.Extensibility.Credentials;
-using Inedo.BuildMaster.Web;
-#elif Otter
-using Inedo.Otter.Extensibility;
-using Inedo.Otter.Extensibility.Credentials;
-using Inedo.Otter.Extensions;
-#endif
-using Inedo.Documentation;
-using Inedo.Serialization;
-using System.Security;
+﻿using System;
 using System.ComponentModel;
-using System;
-using System.Reflection;
-using System.Net.Http.Headers;
 using System.Net;
 using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Reflection;
+using System.Security;
+using Inedo.Documentation;
+using Inedo.Extensibility;
+using Inedo.Extensibility.Credentials;
+using Inedo.Serialization;
+using Inedo.Web;
 
 namespace Inedo.Extensions.Artifactory.Credentials
 {

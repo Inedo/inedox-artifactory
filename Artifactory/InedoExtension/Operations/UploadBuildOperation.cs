@@ -1,23 +1,4 @@
-﻿#if BuildMaster
-using Inedo.BuildMaster.Data;
-using Inedo.BuildMaster.Extensibility;
-using Inedo.BuildMaster.Extensibility.IssueSources;
-using Inedo.BuildMaster.Extensibility.Operations;
-using Inedo.BuildMaster.Web;
-using Inedo.BuildMaster.Web.Controls;
-#elif Otter
-using Inedo.Otter;
-using Inedo.Otter.Data;
-using Inedo.Otter.Extensibility;
-using Inedo.Otter.Extensibility.Operations;
-using Inedo.Otter.Extensions;
-using Inedo.Otter.Web.Controls;
-#endif
-using Inedo.Diagnostics;
-using Inedo.Documentation;
-using Inedo.ExecutionEngine;
-using Inedo.Extensions.Artifactory.SuggestionProviders;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -25,6 +6,13 @@ using System.Linq;
 using System.Net.Http;
 using System.Reflection;
 using System.Threading.Tasks;
+using Inedo.Diagnostics;
+using Inedo.Documentation;
+using Inedo.ExecutionEngine;
+using Inedo.Extensibility;
+using Inedo.Extensibility.Operations;
+using Inedo.Extensions.Artifactory.SuggestionProviders;
+using Inedo.Web;
 
 namespace Inedo.Extensions.Artifactory.Operations
 {
@@ -40,7 +28,7 @@ namespace Inedo.Extensions.Artifactory.Operations
         [Required]
         [DisplayName("Build name")]
         [ScriptAlias("Name")]
-        [SuggestibleValue(typeof(BuildSuggestionProvider))]
+        [SuggestableValue(typeof(BuildSuggestionProvider))]
         public string BuildName { get; set; }
 
         [Required]
@@ -55,11 +43,12 @@ namespace Inedo.Extensions.Artifactory.Operations
         [PlaceholderText("$PackageNumber")]
         public string BuildNumber { get; set; }
 
-#if BuildMaster
+        /*
         [DisplayName("Include issues")]
         [ScriptAlias("IncludeIssues")]
+        [AppliesTo(InedoProduct.BuildMaster)]
         public bool IncludeIssues { get; set; }
-#endif
+        */
 
         [DisplayName("Build type")]
         [ScriptAlias("BuildType")]
@@ -119,11 +108,12 @@ namespace Inedo.Extensions.Artifactory.Operations
                 };
             }
 
-            using (var db = new DB.Context(true))
+            info.ExecutionUrl = $"{SDK.BaseUrl}/executions/execution-details?executionId={context.ExecutionId}";
+
+            /*
+            using (var db = new DB.Context())
             {
-#if BuildMaster
-                info.Started = new DateTimeOffset((await db.Executions_GetExecutionAsync(context.ExecutionId).ConfigureAwait(false)).Start_Date, TimeSpan.Zero);
-                info.ExecutionUrl = $"{await db.Configuration_GetValueAsync("CoreEx", "BuildMaster_BaseUrl").ConfigureAwait(false)}/executions/execution-details?executionId={context.ExecutionId}";
+                //info.Started = new DateTimeOffset((await db.Executions_GetExecutionAsync(context.ExecutionId).ConfigureAwait(false)).Start_Date, TimeSpan.Zero);
 
                 if (this.IncludeIssues)
                 {
@@ -145,17 +135,8 @@ namespace Inedo.Extensions.Artifactory.Operations
                         };
                     }
                 }
-#elif Otter
-                var executer = context.GetType().GetField("executer", BindingFlags.NonPublic | BindingFlags.Instance)?.GetValue(context);
-                var executionId = executer?.GetType()?.GetProperty("ExecutionId")?.GetValue(executer) as int?;
-
-                if (executionId.HasValue)
-                {
-                    info.Started = new DateTimeOffset((await db.Executions_GetExecutionAsync(executionId.Value).ConfigureAwait(false)).Start_Date, TimeSpan.Zero);
-                    info.ExecutionUrl = $"{OtterConfig.OtterBaseUrl}/executions/details?executionId={executionId.Value}";
-                }
-#endif
             }
+            */
 
             info.Modules = this.Modules?.Select(m => BuildModule.FromRuntimeValue(this, m.AsDictionary()));
 
@@ -239,7 +220,7 @@ namespace Inedo.Extensions.Artifactory.Operations
             [JsonProperty(PropertyName = "dependencies", NullValueHandling = NullValueHandling.Ignore)]
             public IEnumerable<BuildDependency> Dependencies { get; set; }
 
-            internal static BuildModule FromRuntimeValue(ILogger logger, IDictionary<string, RuntimeValue> value)
+            internal static BuildModule FromRuntimeValue(ILogSink logger, IDictionary<string, RuntimeValue> value)
             {
                 if (!value.ContainsKey("id"))
                 {
@@ -275,7 +256,7 @@ namespace Inedo.Extensions.Artifactory.Operations
             [JsonProperty(PropertyName = "name", Required = Required.Always)]
             public string Name { get; set; }
 
-            internal static BuildArtifact FromRuntimeValue(ILogger logger, IDictionary<string, RuntimeValue> value)
+            internal static BuildArtifact FromRuntimeValue(ILogSink logger, IDictionary<string, RuntimeValue> value)
             {
                 return new BuildArtifact
                 {
@@ -300,7 +281,7 @@ namespace Inedo.Extensions.Artifactory.Operations
             [JsonProperty(PropertyName = "scopes", Required = Required.Always)]
             public IEnumerable<string> Scopes { get; set; }
 
-            internal static BuildDependency FromRuntimeValue(ILogger logger, IDictionary<string, RuntimeValue> value)
+            internal static BuildDependency FromRuntimeValue(ILogSink logger, IDictionary<string, RuntimeValue> value)
             {
                 return new BuildDependency
                 {
@@ -331,7 +312,7 @@ namespace Inedo.Extensions.Artifactory.Operations
             public string Summary { get; set; }
         }
 
-#if BuildMaster
+        /*
         private class IssueEnumerationContext : IIssueSourceEnumerationContext
         {
             public IssueEnumerationContext(UploadBuildOperation operation, IOperationExecutionContext context, Tables.IssueSources_Extended data)
@@ -345,6 +326,6 @@ namespace Inedo.Extensions.Artifactory.Operations
             public int? ExecutionId { get; }
             public ILogger Log { get; }
         }
-#endif
+        */
     }
 }

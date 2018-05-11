@@ -1,25 +1,17 @@
-﻿#if BuildMaster
-using Inedo.BuildMaster.Extensibility;
-using Inedo.BuildMaster.Extensibility.Operations;
-using Inedo.BuildMaster.Web;
-using Inedo.BuildMaster.Web.Controls;
-#elif Otter
-using Inedo.Otter.Extensibility;
-using Inedo.Otter.Extensibility.Operations;
-using Inedo.Otter.Extensions;
-using Inedo.Otter.Web.Controls;
-#endif
-using Inedo.Diagnostics;
-using Inedo.Documentation;
-using Inedo.ExecutionEngine;
-using Inedo.Extensions.Artifactory.SuggestionProviders;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using Inedo.Diagnostics;
+using Inedo.Documentation;
+using Inedo.ExecutionEngine;
+using Inedo.Extensibility;
+using Inedo.Extensibility.Operations;
+using Inedo.Extensions.Artifactory.SuggestionProviders;
+using Inedo.Web;
 
 namespace Inedo.Extensions.Artifactory.Operations
 {
@@ -35,7 +27,7 @@ namespace Inedo.Extensions.Artifactory.Operations
         [Required]
         [DisplayName("Build name")]
         [ScriptAlias("BuildName")]
-        [SuggestibleValue(typeof(BuildSuggestionProvider))]
+        [SuggestableValue(typeof(BuildSuggestionProvider))]
         public string BuildName { get; set; }
 
         [Required]
@@ -59,13 +51,13 @@ namespace Inedo.Extensions.Artifactory.Operations
         [Category("Move Artifacts")]
         [DisplayName("From repository")]
         [ScriptAlias("FromRepository")]
-        [SuggestibleValue(typeof(RepositorySuggestionProvider))]
+        [SuggestableValue(typeof(RepositorySuggestionProvider))]
         public string FromRepository { get; set; }
 
         [Category("Move Artifacts")]
         [DisplayName("To repository")]
         [ScriptAlias("ToRepository")]
-        [SuggestibleValue(typeof(RepositorySuggestionProvider))]
+        [SuggestableValue(typeof(RepositorySuggestionProvider))]
         public string ToRepository { get; set; }
 
         [Category("Move Artifacts")]
