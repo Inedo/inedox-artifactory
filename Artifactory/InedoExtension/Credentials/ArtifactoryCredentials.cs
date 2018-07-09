@@ -3,7 +3,6 @@ using System.ComponentModel;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using System.Reflection;
 using System.Security;
 using Inedo.Documentation;
 using Inedo.Extensibility;
@@ -51,7 +50,7 @@ namespace Inedo.Extensions.Artifactory.Credentials
                 {
                     UserAgent =
                     {
-                        new ProductInfoHeaderValue(typeof(ArtifactoryCredentials).Assembly.GetCustomAttribute<AssemblyProductAttribute>().Product, typeof(ResourceCredentials).Assembly.GetName().Version.ToString()),
+                        new ProductInfoHeaderValue(SDK.ProductName, SDK.ProductVersion.ToString(3)),
                         new ProductInfoHeaderValue(typeof(ArtifactoryCredentials).Assembly.GetName().Name, typeof(ArtifactoryCredentials).Assembly.GetName().Version.ToString()),
                     }
                 }
