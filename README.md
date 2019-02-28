@@ -1,6 +1,6 @@
 # inedox-artifactory
 
-[![Build status](https://ci.appveyor.com/api/projects/status/cf1bec70wywpawqg/branch/master?svg=true)](https://ci.appveyor.com/project/Inedo/inedox-artifactory/branch/master)
+[![Build status](https://buildmaster.inedo.com/api/ci-badges/image?API_Key=badges&$ApplicationId=24)](https://buildmaster.inedo.com/api/ci-badges/link?API_Key=badges&$ApplicationId=24)
 
 Contains operations for uploading and retrieving builds and artifacts in JFrog Artifactory.
 
