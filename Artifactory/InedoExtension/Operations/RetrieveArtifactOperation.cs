@@ -1,14 +1,8 @@
 ﻿using System.ComponentModel;
-using System.IO;
-using System.Net.Http;
-using System.Threading.Tasks;
 using Inedo.Agents;
 using Inedo.Documentation;
 using Inedo.Extensibility;
 using Inedo.Extensibility.Operations;
-using Inedo.Extensions.Artifactory.SuggestionProviders;
-using Inedo.Web;
-using Inedo.Web.Plans.ArgumentEditors;
 
 namespace Inedo.Extensions.Artifactory.Operations
 {
@@ -24,7 +18,6 @@ namespace Inedo.Extensions.Artifactory.Operations
         [Required]
         [DisplayName("Repository")]
         [ScriptAlias("Repository")]
-        [SuggestableValue(typeof(RepositorySuggestionProvider))]
         public string RepositoryKey { get; set; }
 
         [Required]
@@ -35,7 +28,6 @@ namespace Inedo.Extensions.Artifactory.Operations
         [Required]
         [DisplayName("Write to file")]
         [ScriptAlias("ToFile")]
-        [FilePathEditor]
         public string ToFile { get; set; }
 
         public override async Task ExecuteAsync(IOperationExecutionContext context)

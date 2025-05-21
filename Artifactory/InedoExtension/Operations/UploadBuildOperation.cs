@@ -1,18 +1,12 @@
-﻿using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Net.Http;
+﻿using System.ComponentModel;
 using System.Reflection;
-using System.Threading.Tasks;
 using Inedo.Diagnostics;
 using Inedo.Documentation;
 using Inedo.ExecutionEngine;
 using Inedo.Extensibility;
 using Inedo.Extensibility.Operations;
-using Inedo.Extensions.Artifactory.SuggestionProviders;
 using Inedo.Web;
+using Newtonsoft.Json;
 
 namespace Inedo.Extensions.Artifactory.Operations
 {
@@ -28,7 +22,6 @@ namespace Inedo.Extensions.Artifactory.Operations
         [Required]
         [DisplayName("Build name")]
         [ScriptAlias("Name")]
-        [SuggestableValue(typeof(BuildSuggestionProvider))]
         public string BuildName { get; set; }
 
         [Required]

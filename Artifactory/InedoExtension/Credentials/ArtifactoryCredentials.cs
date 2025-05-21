@@ -1,7 +1,5 @@
-﻿using System;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Net;
-using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Security;
 using Inedo.Documentation;
@@ -15,13 +13,12 @@ namespace Inedo.Extensions.Artifactory.Credentials
     [DisplayName("JFrog Artifactory")]
     [Description("Credentials for JFrog Artifactory.")]
     [ScriptAlias("Artifactory")]
-    public sealed class ArtifactoryCredentials : ResourceCredentials
+    public sealed class ArtifactoryCredentials : ServiceCredentials, IMissingPersistentPropertyHandler
     {
-        [Persistent]
         [Required]
         [DisplayName("Base URL")]
         [PlaceholderText("https://example.jfrog.io/example/")]
-        public string BaseUrl { get; set; }
+        public override string ServiceUrl { get; set; }
 
         [Persistent]
         [DisplayName("User name")]
@@ -32,10 +29,10 @@ namespace Inedo.Extensions.Artifactory.Credentials
         [DisplayName("Password or API key")]
         public SecureString Password { get; set; }
 
-        public override RichDescription GetDescription()
-        {
-            return new RichDescription(new Hilite(this.UserName), " @ ", new Hilite(this.BaseUrl));
-        }
+        public override RichDescription GetCredentialDescription() => new(this.UserName);
+        public override RichDescription GetServiceDescription() => new(this.ServiceUrl);
+
+        public override ValueTask<ValidationResults> ValidateAsync(CancellationToken cancellationToken = default) => new();
 
         internal HttpClient CreateClient()
         {
@@ -45,7 +42,7 @@ namespace Inedo.Extensions.Artifactory.Credentials
                 PreAuthenticate = true
             })
             {
-                BaseAddress = new Uri(this.BaseUrl.TrimEnd('/') + '/'),
+                BaseAddress = new Uri(this.ServiceUrl.TrimEnd('/') + '/'),
                 DefaultRequestHeaders =
                 {
                     UserAgent =
@@ -55,6 +52,12 @@ namespace Inedo.Extensions.Artifactory.Credentials
                     }
                 }
             };
+        }
+
+        void IMissingPersistentPropertyHandler.OnDeserializedMissingProperties(IReadOnlyDictionary<string, string> missingProperties)
+        {
+            if (missingProperties.TryGetValue("BaseUrl", out var baseUrl))
+                this.ServiceUrl = baseUrl;
         }
     }
 }

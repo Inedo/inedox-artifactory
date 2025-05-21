@@ -1,17 +1,12 @@
-﻿using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
+﻿using System.ComponentModel;
 using System.Reflection;
-using System.Threading.Tasks;
 using Inedo.Diagnostics;
 using Inedo.Documentation;
 using Inedo.ExecutionEngine;
 using Inedo.Extensibility;
 using Inedo.Extensibility.Operations;
-using Inedo.Extensions.Artifactory.SuggestionProviders;
 using Inedo.Web;
+using Newtonsoft.Json;
 
 namespace Inedo.Extensions.Artifactory.Operations
 {
@@ -27,7 +22,6 @@ namespace Inedo.Extensions.Artifactory.Operations
         [Required]
         [DisplayName("Build name")]
         [ScriptAlias("BuildName")]
-        [SuggestableValue(typeof(BuildSuggestionProvider))]
         public string BuildName { get; set; }
 
         [Required]
@@ -51,13 +45,11 @@ namespace Inedo.Extensions.Artifactory.Operations
         [Category("Move Artifacts")]
         [DisplayName("From repository")]
         [ScriptAlias("FromRepository")]
-        [SuggestableValue(typeof(RepositorySuggestionProvider))]
         public string FromRepository { get; set; }
 
         [Category("Move Artifacts")]
         [DisplayName("To repository")]
         [ScriptAlias("ToRepository")]
-        [SuggestableValue(typeof(RepositorySuggestionProvider))]
         public string ToRepository { get; set; }
 
         [Category("Move Artifacts")]
@@ -94,6 +86,7 @@ namespace Inedo.Extensions.Artifactory.Operations
                 Properties = this.Properties.ToDictionary(p => p.Key, p => p.Value.AsEnumerable().Select(v => v.AsString()))
             };
 
+#pragma warning disable SYSLIB0013 // Type or member is obsolete
             await this.PostAsync($"api/build/promote/{Uri.EscapeUriString(this.BuildName)}/{Uri.EscapeUriString(this.BuildNumber)}", request, async response =>
             {
                 var result = await this.ParseResponseAsync<BuildResult>(response).ConfigureAwait(false);
@@ -105,6 +98,7 @@ namespace Inedo.Extensions.Artifactory.Operations
                     }
                 }
             }, context.CancellationToken).ConfigureAwait(false);
+#pragma warning restore SYSLIB0013 // Type or member is obsolete
         }
 
         protected override ExtendedRichDescription GetDescription(IOperationConfiguration config)

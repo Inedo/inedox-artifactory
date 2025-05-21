@@ -1,19 +1,12 @@
-﻿using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.IO;
-using System.Net.Http;
-using System.Threading.Tasks;
+﻿using System.ComponentModel;
 using Inedo.Agents;
 using Inedo.Diagnostics;
 using Inedo.Documentation;
 using Inedo.ExecutionEngine;
 using Inedo.Extensibility;
 using Inedo.Extensibility.Operations;
-using Inedo.Extensions.Artifactory.SuggestionProviders;
 using Inedo.Web;
-using Inedo.Web.Plans.ArgumentEditors;
+using Newtonsoft.Json;
 
 namespace Inedo.Extensions.Artifactory.Operations
 {
@@ -29,7 +22,6 @@ namespace Inedo.Extensions.Artifactory.Operations
         [Required]
         [DisplayName("Repository")]
         [ScriptAlias("Repository")]
-        [SuggestableValue(typeof(RepositorySuggestionProvider))]
         public string RepositoryKey { get; set; }
 
         [Required]
@@ -40,7 +32,6 @@ namespace Inedo.Extensions.Artifactory.Operations
         [Required]
         [DisplayName("File to upload")]
         [ScriptAlias("FromFile")]
-        [FilePathEditor]
         public string FromFile { get; set; }
 
         [Output]

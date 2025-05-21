@@ -1,18 +1,11 @@
-﻿using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.ComponentModel;
 using Inedo.Agents;
 using Inedo.Diagnostics;
 using Inedo.Documentation;
 using Inedo.Extensibility;
 using Inedo.Extensibility.Operations;
-using Inedo.Extensions.Artifactory.SuggestionProviders;
 using Inedo.Web;
-using Inedo.Web.Plans.ArgumentEditors;
+using Newtonsoft.Json;
 
 namespace Inedo.Extensions.Artifactory.Operations
 {
@@ -28,7 +21,6 @@ namespace Inedo.Extensions.Artifactory.Operations
         [Required]
         [DisplayName("Build name")]
         [ScriptAlias("BuildName")]
-        [SuggestableValue(typeof(BuildSuggestionProvider))]
         public string BuildName { get; set; }
 
         [Required]
@@ -45,7 +37,6 @@ namespace Inedo.Extensions.Artifactory.Operations
         [Required]
         [DisplayName("Write to file")]
         [ScriptAlias("ToFile")]
-        [FilePathEditor]
         public string ToFile { get; set; }
 
         [DisplayName("Mappings")]
