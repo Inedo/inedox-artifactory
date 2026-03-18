@@ -3,16 +3,16 @@
 		<AssemblyName>Artifactory</AssemblyName>
 		<RootNamespace>Inedo.Extensions</RootNamespace>
 		<OutputType>Library</OutputType>
-		<TargetFramework>net8.0</TargetFramework>
+		<TargetFramework>net10.0</TargetFramework>
 		<LangVersion>latest</LangVersion>
 		<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
 		<ImplicitUsings>enable</ImplicitUsings>
 	</PropertyGroup>
 	<ItemGroup>
-		<PackageReference Include="Inedo.SDK" Version="3.1.0">
+		<PackageReference Include="Inedo.SDK" Version="4.0.0-ci.7">
 			<ExcludeAssets>runtime</ExcludeAssets>
 		</PackageReference>
-		<PackageReference Include="Newtonsoft.Json" Version="13.0.3">
+		<PackageReference Include="Newtonsoft.Json" Version="13.0.4">
 			<ExcludeAssets>runtime</ExcludeAssets>
 		</PackageReference>
 	</ItemGroup>
