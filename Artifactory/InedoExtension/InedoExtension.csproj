@@ -9,7 +9,7 @@
 		<ImplicitUsings>enable</ImplicitUsings>
 	</PropertyGroup>
 	<ItemGroup>
-		<PackageReference Include="Inedo.SDK" Version="4.0.0-ci.7">
+		<PackageReference Include="Inedo.SDK" Version="4.0.0">
 			<ExcludeAssets>runtime</ExcludeAssets>
 		</PackageReference>
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.4">
